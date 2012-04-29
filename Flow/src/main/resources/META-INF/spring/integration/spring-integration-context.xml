@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-file="http://www.springframework.org/schema/integration/file"
+	xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration
+                        http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
+                        http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                        http://www.springframework.org/schema/integration/file
+					    http://www.springframework.org/schema/integration/file/spring-integration-file-2.1.xsd
+                        http://www.springframework.org/schema/integration/xml
+					    http://www.springframework.org/schema/integration/xml/spring-integration-xml-2.1.xsd
+					    ">
+
+    <context:component-scan base-package="com.flexion.demo.service" />
+
+	
+	<int-file:inbound-channel-adapter id="poller"
+           directory="file:/tmp/dropbox"
+           filename-pattern="test*.xml" channel="parsechan">
+           <int:poller fixed-delay="10"  time-unit="SECONDS"/>
+           </int-file:inbound-channel-adapter>
+
+	
+	<bean id="transformer" class="com.flexion.demo.service.Transformer"
+		abstract="false" />
+	<bean id="xml2dom" class="com.flexion.demo.service.XML2DOM"/>
+	
+    <int:transformer input-channel="parsechan" id="parser" ref="xml2dom" output-channel="sink"></int:transformer>
+	
+	
+	<int:channel id="parsechan">
+		<int:interceptors>
+			<int:wire-tap channel="dropper" />
+		</int:interceptors>
+	</int:channel>
+	
+	<int-file:outbound-channel-adapter id="dropper" 
+		directory="file:/tmp/dropbox"
+		filename-generator-expression="'out-' + payload.name"
+		delete-source-files="false"
+		/>
+		
+
+	<int:outbound-channel-adapter id="sink" method="log">
+        <bean class="com.flexion.demo.service.LogIt"/>
+    </int:outbound-channel-adapter>
+    
+    <!-- 
+    Implement MWS polling with MethodInvoking... as a first cut. (Can implement full MessageProducer later).
+    Use code from File classes to implement duplicate filtering?
+    
+    Sources:
+    - orders
+    - document feed: feed results
+    - document feed: payments
+    - ftp: shipments
+    - ftp: inventory
+    
+    Destinations:
+    - ftp: orders
+    - document feed: shipments
+    - document feed: inventory
+    - ftp: payments 
+    
+    Wiretap:
+    - Raw messages
+    
+    
+     -->
+</beans>

@@ -6,16 +6,3 @@
 #header {
     background-color: #EEEEEE;
 }
-
-.twitterMessages {
-    list-style: none;
-}
-
-.twitterMessages img {
-    vertical-align: middle;
-}
-
-.twitterMessages li {
-    padding-top: 2px;
-    padding-bottom: 2px;
-}

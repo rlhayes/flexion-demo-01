@@ -15,6 +15,9 @@
  */
 package com.flexion.demo.mvc.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -30,28 +33,23 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+    private List<String> processed = new ArrayList<String>();
+    
     /**
      * Simply selects the home view to render by returning its name.
      */
     @RequestMapping(value="/")
-    public String home(Model model, @RequestParam(required=false) String startPolling,
-                                    @RequestParam(required=false) String stopPolling) {
+    public String home(Model model) {
 
-        if (startPolling != null) {
-            logger.info("start");
-            // TODO something
-            return "redirect:/";
-        }
-
-        if (stopPolling != null) {
-            logger.info("stop");
-            // TODO something
-            return "redirect:/";
-        }
-
+    	model.addAttribute("processed", processed);
         return "home";
     }
 
+    public synchronized void note(Object x) {
+    	logger.debug("Noting {}", x);
+    	processed.add(String.valueOf(x));
+    }
+    
     /**
      * Simply selects the home view to render by returning its name.
      */
@@ -60,7 +58,7 @@ public class HomeController {
 
         logger.info("Ajax");
 
-        return "twitterMessages";
+        return "processingLog";
 
     }
 }

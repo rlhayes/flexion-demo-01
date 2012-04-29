@@ -17,38 +17,46 @@
 					    http://www.springframework.org/schema/integration/xml/spring-integration-xml-2.1.xsd
 					    ">
 
-    <context:component-scan base-package="com.flexion.demo.service" />
+    <context:component-scan base-package="com.flexion.demo.mvc.controller" />
 
 	
 	<int-file:inbound-channel-adapter id="poller"
-           directory="file:/tmp/dropbox"
-           filename-pattern="test*.xml" channel="parsechan">
-           <int:poller fixed-delay="10"  time-unit="SECONDS"/>
+           directory="file:/tmp/dropbox" prevent-duplicates="true"
+           filename-pattern="*QUALITY.xml" channel="parsechan">
+           <int:poller fixed-delay="10"  time-unit="SECONDS" max-messages-per-poll="1" />
            </int-file:inbound-channel-adapter>
 
 	
 	<bean id="transformer" class="com.flexion.demo.service.Transformer"
 		abstract="false" />
 	<bean id="xml2dom" class="com.flexion.demo.service.XML2DOM"/>
-	
-    <int:transformer input-channel="parsechan" id="parser" ref="xml2dom" output-channel="sink"></int:transformer>
-	
-	
+
+	<int:transformer input-channel="parsechan" id="parser" ref="xml2dom"
+		output-channel="domchan">
+	</int:transformer>
+
+
 	<int:channel id="parsechan">
 		<int:interceptors>
 			<int:wire-tap channel="dropper" />
 		</int:interceptors>
 	</int:channel>
 	
-	<int-file:outbound-channel-adapter id="dropper" 
+<!-- 	<int-file:outbound-channel-adapter id="dropper" 
 		directory="file:/tmp/dropbox"
 		filename-generator-expression="'out-' + payload.name"
 		delete-source-files="false"
 		/>
-		
+		 -->
+		 
+	<int:outbound-channel-adapter id="dropper" ref="homeController" method="note">
+	</int:outbound-channel-adapter>
+    <bean id="store" class="com.flexion.demo.service.Store" init-method="init">
+    	<property name="dbName" value="gwdp"/>
+    	<property name="collectionName" value="qw"/>
+    </bean>
 
-	<int:outbound-channel-adapter id="sink" method="log">
-        <bean class="com.flexion.demo.service.LogIt"/>
+	<int:outbound-channel-adapter id="sink" method="store" ref="store">
     </int:outbound-channel-adapter>
     
     <!-- 
@@ -73,4 +81,32 @@
     
     
      -->
+    
+    
+    <int-xml:xpath-transformer id="extract"
+    	xpath-expression="//Result/date | //Result/time | //Result/zone | //Result/ResultDescription/CharacteristicName | //Result//ResultMeasureValue | //Result//MeasureUnitCode"
+    	evaluation-type="NODE_LIST_RESULT" output-channel="mapchan"
+    	input-channel="nodechan">
+    </int-xml:xpath-transformer>
+
+
+    <int-xml:xpath-splitter id="result-splitter" input-channel="domchan" create-documents="true"
+    	output-channel="nodechan" >
+    	<int-xml:xpath-expression expression="/Results/Result"/>
+    </int-xml:xpath-splitter>
+    
+    <int:channel id="domchan"></int:channel>
+
+	<int:channel id="nodechan">
+<!-- 		<int:interceptors>
+			<int:wire-tap channel="logger01" />
+		</int:interceptors> -->
+	</int:channel>
+    
+	
+	<int:transformer input-channel="mapchan" output-channel="sink"
+		id="toMap">
+		<bean class="com.flexion.demo.service.Nodes2Map"/>
+	</int:transformer>
+	<int:channel id="mapchan"></int:channel>
 </beans>

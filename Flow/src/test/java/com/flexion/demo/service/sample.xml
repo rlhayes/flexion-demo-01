@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Results xmlns:gwml="http://www.nrcan.gc.ca/xml/gwml/1"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions"
+	xmlns:wqx="http://qwwebservices.usgs.gov/schemas/WQX-Outbound/2_0/">
+	<time>1957-08-09</time>
+	<Result>
+		<date>1957-08-09</date>
+		<time>12:01:53</time>
+		<zone>CDT</zone>
+		<ResultDescription
+			xmlns="http://qwwebservices.usgs.gov/schemas/WQX-Outbound/2_0/"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<CharacteristicName>Carbon dioxide</CharacteristicName>
+			<ResultSampleFractionText>Total</ResultSampleFractionText>
+			<ResultMeasure>
+				<ResultMeasureValue>1.4</ResultMeasureValue>
+				<MeasureUnitCode>mg/l</MeasureUnitCode>
+			</ResultMeasure>
+			<ResultStatusIdentifier>Historical</ResultStatusIdentifier>
+			<ResultValueTypeName>Actual</ResultValueTypeName>
+			<USGSPCode>00405</USGSPCode>
+		</ResultDescription>
+	</Result>
+	<Result>
+		<date>1957-08-09</date>
+		<time>17:21:33</time>
+		<zone>CDT</zone>
+		<ResultDescription
+			xmlns="http://qwwebservices.usgs.gov/schemas/WQX-Outbound/2_0/"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<CharacteristicName>pH</CharacteristicName>
+			<ResultSampleFractionText>Total</ResultSampleFractionText>
+			<ResultMeasure>
+				<ResultMeasureValue>7.9</ResultMeasureValue>
+				<MeasureUnitCode>std units</MeasureUnitCode>
+			</ResultMeasure>
+			<ResultStatusIdentifier>Historical</ResultStatusIdentifier>
+			<ResultValueTypeName>Actual</ResultValueTypeName>
+			<ResultCommentText>field</ResultCommentText>
+			<USGSPCode>00400</USGSPCode>
+		</ResultDescription>
+	</Result>
+	<Result>
+		<date>1957-08-09</date>
+		<time>03:11:32</time>
+		<zone>CDT</zone>
+		<ResultDescription
+			xmlns="http://qwwebservices.usgs.gov/schemas/WQX-Outbound/2_0/"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<CharacteristicName>Specific conductance</CharacteristicName>
+			<ResultSampleFractionText>Total</ResultSampleFractionText>
+			<ResultMeasure>
+				<ResultMeasureValue>147</ResultMeasureValue>
+				<MeasureUnitCode>uS/cm @25C</MeasureUnitCode>
+			</ResultMeasure>
+			<ResultStatusIdentifier>Historical</ResultStatusIdentifier>
+			<ResultValueTypeName>Actual</ResultValueTypeName>
+			<ResultTemperatureBasisText>25 deg C</ResultTemperatureBasisText>
+			<USGSPCode>00095</USGSPCode>
+		</ResultDescription>
+	</Result>
+</Results>

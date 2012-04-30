@@ -24,6 +24,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class SpringIntegrationTest {
 
+	/**
+	 * Test that the Spring context comes up properly.
+	 * Note that starting the context fires up the pollers and starts the flow.
+	 * @throws Exception
+	 */
     @Test
     public void testSpringIntegrationContextStartup() throws Exception{
 

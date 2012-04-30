@@ -46,6 +46,16 @@ public class Store {
 		collection.save(obj);	
 	}
 
+	public boolean remove(String kay, String val) {
+		BasicDBObject q = new BasicDBObject(kay, val);
+		Object prev = collection.findAndRemove(q);
+		return prev != null;
+	}
+	
+	public long count() {
+		return collection.count();
+	}
+	
 	public String getDbName() {
 		return dbName;
 	}

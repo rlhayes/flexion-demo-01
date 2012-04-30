@@ -19,6 +19,7 @@
 
     <context:component-scan base-package="com.flexion.demo.mvc.controller" />
 
+	<import resource="MongoContext.xml"/>
 	
 	<int-file:inbound-channel-adapter id="poller"
            directory="file:/tmp/dropbox" prevent-duplicates="true"
@@ -51,11 +52,7 @@
 		 
 	<int:outbound-channel-adapter id="dropper" ref="homeController" method="note">
 	</int:outbound-channel-adapter>
-    <bean id="store" class="com.flexion.demo.service.Store" init-method="init">
-    	<property name="dbName" value="gwdp"/>
-    	<property name="collectionName" value="qw"/>
-    </bean>
-
+	
 	<int:outbound-channel-adapter id="sink" method="store" ref="store">
     </int:outbound-channel-adapter>
     

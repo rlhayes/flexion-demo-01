@@ -60,6 +60,7 @@
 	
 	<int:outbound-channel-adapter id="sink" method="store" ref="store"
 		channel="donechan">
+		<int:poller fixed-rate="1000" max-messages-per-poll="1"></int:poller>
     </int:outbound-channel-adapter>
 
 	<!-- 
@@ -101,10 +102,13 @@
     <int:channel id="domchan"></int:channel>
 
 	<int:channel id="nodechan">
-<!-- 		<int:interceptors>
+		<!--  
+		<int:interceptors>
 			<int:wire-tap channel="logger01" />
-		</int:interceptors> -->
+		</int:interceptors>
+		 -->
 	</int:channel>
+<!-- 	<int:logging-channel-adapter id="logger01" level="DEBUG"/> -->
     
 	
 	<int:transformer input-channel="mapchan" id="toMap"
@@ -118,5 +122,7 @@
 		output-channel="parsechan">	
 		<int:header name="filename" expression="payload.name"/>
 	</int:header-enricher>
-	<int:channel id="donechan"></int:channel>
+	<int:channel id="donechan">
+		<int:queue capacity="8000"/>
+	</int:channel>
 </beans>

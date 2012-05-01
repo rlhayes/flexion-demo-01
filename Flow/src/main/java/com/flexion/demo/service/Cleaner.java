@@ -13,7 +13,7 @@ public class Cleaner {
 		
 		Map<String,String> xm = (Map<String, String>) x;
 		
-		xm.put("filename", fnClean);
+		xm.put("well", fnClean);
 		
 		xm.put("datetime", findDate(xm));
 		

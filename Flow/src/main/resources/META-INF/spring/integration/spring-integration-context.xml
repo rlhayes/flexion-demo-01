@@ -116,7 +116,7 @@
 	
 	<int:header-enricher id="file-name-recorder" input-channel="poller"
 		output-channel="parsechan">	
-		<int:header name="filename" expression="payload.filename"/>
+		<int:header name="filename" expression="payload.name"/>
 	</int:header-enricher>
 	<int:channel id="donechan"></int:channel>
 </beans>

@@ -4,6 +4,7 @@
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:int-file="http://www.springframework.org/schema/integration/file"
 	xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/integration
                         http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
@@ -15,6 +16,8 @@
 					    http://www.springframework.org/schema/integration/file/spring-integration-file-2.1.xsd
                         http://www.springframework.org/schema/integration/xml
 					    http://www.springframework.org/schema/integration/xml/spring-integration-xml-2.1.xsd
+					    http://www.springframework.org/schema/integration/http
+    					http://www.springframework.org/schema/integration/http/spring-integration-http-2.1.xsd
 					    ">
 
     <context:component-scan base-package="com.flexion.demo.mvc.controller" />
@@ -53,7 +56,7 @@
 	<int:outbound-channel-adapter id="dropper" ref="homeController" method="note">
 	</int:outbound-channel-adapter>
 	
-	<int:outbound-channel-adapter id="sink" method="store" ref="store">
+	<int:outbound-channel-adapter id="mongo" method="store" ref="store">
     </int:outbound-channel-adapter>
     
     <!-- 
@@ -100,8 +103,18 @@
 		</int:interceptors> -->
 	</int:channel>
     
+    <int-http:outbound-channel-adapter id="gae"
+    	url="http://localhost:8084/well/${well}?d=${d}&amp;u=${u}&amp;v=${v}&amp;c=${c}"
+    	http-method="PUT"
+    >
+    <int-http:uri-variable name="well" expression='payload.get("well")'/>
+    <int-http:uri-variable name="d" expression='payload.get("datetime")'/>
+    <int-http:uri-variable name="v" expression='payload.get("value")'/>
+    <int-http:uri-variable name="c" expression='payload.get("CharacteristicName")'/>
+    <int-http:uri-variable name="u" expression='payload.get("MeasureUnitCode")'/>
+    </int-http:outbound-channel-adapter>
 	
-	<int:transformer input-channel="mapchan" output-channel="sink"
+	<int:transformer input-channel="mapchan" output-channel="mongo"
 		id="toMap">
 		<bean class="com.flexion.demo.service.Nodes2Map"/>
 	</int:transformer>

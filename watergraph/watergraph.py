@@ -27,7 +27,7 @@ class WellHandler(webapp2.RequestHandler):
     def store(self,well,date,unit,value,chara):
         logging.info('will try to store data for %s', well)
         logging.info('date=%s, unit=%s, value=%s, ctr=%s', date, unit, value, chara)
-        date_parsed = datetime.datetime.strptime(date,'%Y-%m-%dT%H:%M:%S')
+        date_parsed = datetime.datetime.strptime(date,'%Y-%m-%dT%H:%M:%S %Z')
         value_parsed = float(value)
         d = datum.Datum(well=well, when=date_parsed, chara=chara, unit=unit, value=value_parsed)
         datum.save(d)

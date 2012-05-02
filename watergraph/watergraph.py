@@ -27,11 +27,23 @@ class WellHandler(webapp2.RequestHandler):
     def store(self,well,date,unit,value,chara):
         logging.info('will try to store data for %s', well)
         logging.info('date=%s, unit=%s, value=%s, ctr=%s', date, unit, value, chara)
-        date_parsed = datetime.datetime.strptime(date,'%Y-%m-%dT%H:%M:%S %Z')
-        value_parsed = float(value)
-        d = datum.Datum(well=well, when=date_parsed, chara=chara, unit=unit, value=value_parsed)
-        datum.save(d)
+        date_parsed = datetime.datetime.strptime(date,'%Y-%m-%dT%H:%M:%S')
+        if value:
+            value_parsed = float(value)
+            d = datum.Datum(well=well, when=date_parsed, chara=chara, unit=unit, value=value_parsed)
+            datum.save(d)
+        else:
+            logging.info('no value to store')
 
+class DataProviderHandler(webapp2.RequestHandler):
+    def get(self, well, element):
+        vv = datum.values(well,element)
+        self.response.headers['Content-Type'] = 'text/plain'
+        for v in vv:
+            self.response.out.write('%s,%f\n' % (v[0].isoformat(), v[1]))
+
+        
+        
 class CharacteristicHandler(webapp2.RequestHandler):
     def get(self):
         proj = datum.listCharacteristics();
@@ -45,6 +57,7 @@ class CharacteristicHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
         webapp2.Route('/well', WellHandler, 'well'),
         webapp2.Route('/well/<well>', WellHandler, 'well'),
+        webapp2.Route('/well/<well>/<element>', DataProviderHandler, 'data'),
         webapp2.Route('/characteristics', CharacteristicHandler, 'chara'),
         ('/', MainPage),
         ])

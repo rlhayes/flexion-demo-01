@@ -24,3 +24,10 @@ def listCharacteristics():
         allC.add(d.chara)
     logging.info('found %d kinds' % len(allC))
     return allC
+
+def values(well, element):
+    q = Datum.all().filter("well",well).filter("chara", element).order("when")
+    for dt in q:
+        yield (dt.when,dt.value)
+
+

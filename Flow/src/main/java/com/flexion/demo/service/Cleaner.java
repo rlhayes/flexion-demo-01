@@ -17,9 +17,19 @@ public class Cleaner {
 		
 		xm.put("datetime", findDate(xm));
 		
+		trimValues(xm);
+		
 		return xm;
 	}
 	
+	public void trimValues(Map<String, String> xm) {
+		for (Map.Entry<String, String> me : xm.entrySet()) {
+			if (me.getValue() != null) {
+				me.setValue(me.getValue().trim());
+			}
+		}		
+	}
+
 	/** Extract a real date from the map, which must have at least date like 1957-03-22
 	 * and may have time like 14:33:21 and zone like CDT.
 	 * Time defaults to 00:00:00 and zone defaults to +00
@@ -35,11 +45,12 @@ public class Cleaner {
 		if (time == null || time.trim().isEmpty()) {
 			time = "00:00:00";
 		}
+		// TODO Adjust time to UTC
 		String zone = m.get("zone");
 		if (zone == null || zone.trim().isEmpty()) {
 			zone = "UTC";
 		}
-		return date + "T" + time + " " + zone;
+		return date + "T" + time;
 	}
 
 	public String cleanFileName(String fn) {

@@ -25,12 +25,12 @@
 	<import resource="MongoContext.xml"/>
 	
 	<int-file:inbound-channel-adapter id="poller"
-           directory="file:/tmp/dropbox" prevent-duplicates="true"
-           filename-pattern="*QUALITY.xml" channel="parsechan">
+		directory="file:/tmp/dropbox" prevent-duplicates="true"
+		filename-pattern="*QUALITY.xml" >
            <int:poller fixed-delay="10"  time-unit="SECONDS" max-messages-per-poll="1" />
            </int-file:inbound-channel-adapter>
 
-	
+
 	<bean id="transformer" class="com.flexion.demo.service.Transformer"
 		abstract="false" />
 	<bean id="xml2dom" class="com.flexion.demo.service.XML2DOM"/>
@@ -39,6 +39,12 @@
 		output-channel="domchan">
 	</int:transformer>
 
+
+	<int:transformer id="cleaner" input-channel="cleanchan"
+		output-channel="donechan">
+		<bean class="com.flexion.demo.service.Cleaner"/>
+		<int:poller fixed-delay="100" max-messages-per-poll="1"/>
+	</int:transformer>
 
 	<int:channel id="parsechan">
 		<int:interceptors>
@@ -56,10 +62,13 @@
 	<int:outbound-channel-adapter id="dropper" ref="homeController" method="note">
 	</int:outbound-channel-adapter>
 	
-	<int:outbound-channel-adapter id="mongo" method="store" ref="store">
+<!-- 	
+	<int:outbound-channel-adapter id="mongo" method="store" ref="store"
+		channel="donechan">
     </int:outbound-channel-adapter>
-    
-    <!-- 
+     -->
+
+	<!-- 
     Implement MWS polling with MethodInvoking... as a first cut. (Can implement full MessageProducer later).
     Use code from File classes to implement duplicate filtering?
     
@@ -98,25 +107,37 @@
     <int:channel id="domchan"></int:channel>
 
 	<int:channel id="nodechan">
-<!-- 		<int:interceptors>
+		<!--  
+		<int:interceptors>
 			<int:wire-tap channel="logger01" />
-		</int:interceptors> -->
+		</int:interceptors>
+		 -->
 	</int:channel>
+<!-- 	<int:logging-channel-adapter id="logger01" level="DEBUG"/> -->
     
     <int-http:outbound-channel-adapter id="gae"
-    	url="http://localhost:8084/well/${well}?d=${d}&amp;u=${u}&amp;v=${v}&amp;c=${c}"
-    	http-method="PUT"
+    	url="http://localhost:8084/well/{well}?d={d}&amp;u={u}&amp;v={v}&amp;c={c}"
+    	http-method="PUT" channel="donechan"
     >
-    <int-http:uri-variable name="well" expression='payload.get("well")'/>
-    <int-http:uri-variable name="d" expression='payload.get("datetime")'/>
-    <int-http:uri-variable name="v" expression='payload.get("value")'/>
-    <int-http:uri-variable name="c" expression='payload.get("CharacteristicName")'/>
-    <int-http:uri-variable name="u" expression='payload.get("MeasureUnitCode")'/>
+	    <int-http:uri-variable name="well" expression='payload.get("well")'/>
+	    <int-http:uri-variable name="d" expression='payload.get("datetime")'/>
+	    <int-http:uri-variable name="v" expression='payload.get("ResultMeasureValue")'/>
+	    <int-http:uri-variable name="c" expression='payload.get("CharacteristicName")'/>
+	    <int-http:uri-variable name="u" expression='payload.get("MeasureUnitCode")'/>
     </int-http:outbound-channel-adapter>
 	
-	<int:transformer input-channel="mapchan" output-channel="mongo"
-		id="toMap">
+	<int:transformer input-channel="mapchan" id="toMap"
+		output-channel="cleanchan">
 		<bean class="com.flexion.demo.service.Nodes2Map"/>
 	</int:transformer>
 	<int:channel id="mapchan"></int:channel>
+	<int:channel id="cleanchan">
+			<int:queue capacity="8000"/>
+	</int:channel>
+	
+	<int:header-enricher id="file-name-recorder" input-channel="poller"
+		output-channel="parsechan">	
+		<int:header name="filename" expression="payload.name"/>
+	</int:header-enricher>
+	<int:channel id="donechan"></int:channel>
 </beans>

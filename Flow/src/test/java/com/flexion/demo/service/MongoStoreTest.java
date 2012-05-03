@@ -15,7 +15,7 @@ public class MongoStoreTest {
 	public void testStore() {
 		final ApplicationContext context = new ClassPathXmlApplicationContext("/META-INF/spring/integration/MongoContext.xml");
 
-		Store s = context.getBean("store", Store.class);
+		Store s = context.getBean("mongo-store", Store.class);
 
 		long b4 = s.count();
 		Map<String,String> thingie = new HashMap<String,String>();

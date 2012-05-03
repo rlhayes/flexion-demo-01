@@ -5,7 +5,7 @@
                         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-	<bean id="store" class="com.flexion.demo.service.Store"
+	<bean id="mongo-store" class="com.flexion.demo.service.Store"
 		init-method="init">
 		<property name="dbName" value="gwdp" />
 		<property name="collectionName" value="qw" />

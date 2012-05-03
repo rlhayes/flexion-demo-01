@@ -39,7 +39,7 @@
 		output-channel="domchan">
 	</int:transformer>
 
-
+	<!--  outbound gae or mongo -->
 	<int:transformer id="cleaner" input-channel="cleanchan"
 		output-channel="donechan">
 		<bean class="com.flexion.demo.service.Cleaner"/>
@@ -62,34 +62,12 @@
 	<int:outbound-channel-adapter id="dropper" ref="homeController" method="note">
 	</int:outbound-channel-adapter>
 	
-<!-- 	
-	<int:outbound-channel-adapter id="mongo" method="store" ref="store"
+
+	<int:outbound-channel-adapter id="mongo" method="store" ref="mongo-store"
 		channel="donechan">
     </int:outbound-channel-adapter>
-     -->
+     
 
-	<!-- 
-    Implement MWS polling with MethodInvoking... as a first cut. (Can implement full MessageProducer later).
-    Use code from File classes to implement duplicate filtering?
-    
-    Sources:
-    - orders
-    - document feed: feed results
-    - document feed: payments
-    - ftp: shipments
-    - ftp: inventory
-    
-    Destinations:
-    - ftp: orders
-    - document feed: shipments
-    - document feed: inventory
-    - ftp: payments 
-    
-    Wiretap:
-    - Raw messages
-    
-    
-     -->
     
     
     <int-xml:xpath-transformer id="extract"

@@ -39,7 +39,6 @@
 		output-channel="domchan">
 	</int:transformer>
 
-	<!--  outbound gae or mongo -->
 	<int:transformer id="cleaner" input-channel="cleanchan"
 		output-channel="donechan">
 		<bean class="com.flexion.demo.service.Cleaner"/>
@@ -47,10 +46,10 @@
 	</int:transformer>
 
 	<int:channel id="parsechan">
-		<int:interceptors>
+<!-- 		<int:interceptors>
 			<int:wire-tap channel="dropper" />
 		</int:interceptors>
-	</int:channel>
+ -->	</int:channel>
 	
 <!-- 	<int-file:outbound-channel-adapter id="dropper" 
 		directory="file:/tmp/dropbox"
@@ -59,16 +58,8 @@
 		/>
 		 -->
 		 
-	<int:outbound-channel-adapter id="dropper" ref="homeController" method="note">
-	</int:outbound-channel-adapter>
 	
-
-	<int:outbound-channel-adapter id="mongo" method="store" ref="mongo-store"
-		channel="donechan">
-    </int:outbound-channel-adapter>
-     
-
-    
+	
     
     <int-xml:xpath-transformer id="extract"
     	xpath-expression="//Result/date | //Result/time | //Result/zone | //Result/ResultDescription/CharacteristicName | //Result//ResultMeasureValue | //Result//MeasureUnitCode"
@@ -93,8 +84,16 @@
 	</int:channel>
 <!-- 	<int:logging-channel-adapter id="logger01" level="DEBUG"/> -->
     
+    
+<!-- 
+	<int:outbound-channel-adapter id="mongo" method="store" ref="mongo-store"
+		channel="donechan">
+    </int:outbound-channel-adapter>
+ -->
+    
+    
     <int-http:outbound-channel-adapter id="gae"
-    	url="http://localhost:8084/well/{well}?d={d}&amp;u={u}&amp;v={v}&amp;c={c}"
+    	url="http://waterquality608.appspot.com/well/{well}?d={d}&amp;u={u}&amp;v={v}&amp;c={c}"
     	http-method="PUT" channel="donechan"
     >
 	    <int-http:uri-variable name="well" expression='payload.get("well")'/>
@@ -117,5 +116,9 @@
 		output-channel="parsechan">	
 		<int:header name="filename" expression="payload.name"/>
 	</int:header-enricher>
+	
 	<int:channel id="donechan"></int:channel>
+	<int:logging-channel-adapter id="logger" expression="filename"
+		channel="parsechan">
+	</int:logging-channel-adapter>
 </beans>

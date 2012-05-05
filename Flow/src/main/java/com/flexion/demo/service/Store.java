@@ -80,6 +80,5 @@ public class Store {
 		this.addr = addr;
 	}
 	
-	
 }
 

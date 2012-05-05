@@ -1,0 +1,5 @@
+#surefire
+#Thu May 03 11:01:20 CDT 2012
+user.dir=/home/rhayes/git/flexion-demo-01/Flow
+localRepository=/home/rhayes/.m2/repository
+basedir=/home/rhayes/git/flexion-demo-01/Flow

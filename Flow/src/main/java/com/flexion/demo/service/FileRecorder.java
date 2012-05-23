@@ -36,9 +36,20 @@ public class FileRecorder {
 		}
 	}
 	
+	private void ensureIndexes(DBCollection coll) {
+		DBObject keys = new BasicDBObject(FILENAME_KEY, 1);
+		keys.put(DATE_KEY, -1);
+		coll.ensureIndex(keys);
+		
+		keys = new BasicDBObject(DATE_KEY, 11);
+		coll.ensureIndex(keys);
+	}
+	
 	public FileRecorder(Store s) {
 		s.init();
 		store = s;
+		
+		ensureIndexes(store.getCollection());
 	}
 	
 	public void record(String fn) {

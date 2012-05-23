@@ -13,7 +13,7 @@ public class XML2DOMTest {
 	public void testParse() {
 		XML2DOM victim = new XML2DOM();
 		
-		File f = new File("src/test/sample.xml");
+		File f = new File("src/test/resources/sample.xml");
 		System.out.println("fille name " + f.getAbsolutePath());
 		
 		Document dom = victim.parse(f);

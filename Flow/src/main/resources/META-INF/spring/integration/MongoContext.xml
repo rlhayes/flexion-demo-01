@@ -16,5 +16,13 @@
 		<property name="collectionName" value="qw" />
 <!-- 		<property name="addr" ref="mongo-addr"/> -->
 	</bean>
+
+	<bean id="file-record" class="com.flexion.demo.service.Store"
+		init-method="init">
+		<property name="dbName" value="gwdp" />
+		<property name="collectionName" value="files_done" />
+<!-- 		<property name="addr" ref="mongo-addr"/> -->
+	</bean>
+
 </beans>
 

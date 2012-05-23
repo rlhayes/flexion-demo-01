@@ -1,5 +1,7 @@
 package com.flexion.demo.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
@@ -42,8 +45,27 @@ public class Store {
 		logger.info("Storing {}", x);
 
 		Map<String,String> m = (Map<String, String>) x;
+		store(m);	
+	}
+
+	public void store(Map<String, Object> m) {
 		DBObject obj = new BasicDBObject(m);
-		collection.save(obj);	
+		store(obj);
+	}
+
+	public void store(DBObject obj) {
+		collection.save(obj);
+	}
+
+	public Iterable<DBObject> contents() {
+		DBCursor cursor = collection.find();
+		return cursor;
+	}
+	
+	public Iterable<DBObject> contentsSorted(String key, int order) {
+		DBObject orderBy = new BasicDBObject(key, order);
+		DBCursor cursor = collection.find().sort(orderBy);
+		return cursor;
 	}
 
 	public boolean remove(String kay, String val) {
@@ -78,6 +100,10 @@ public class Store {
 
 	public void setAddr(DBAddress addr) {
 		this.addr = addr;
+	}
+
+	public DBCollection getCollection() {
+		return collection;
 	}
 	
 }

@@ -45,22 +45,8 @@
 		<int:poller fixed-delay="100" max-messages-per-poll="1"/>
 	</int:transformer>
 
-	<int:channel id="parsechan">
-<!-- 		<int:interceptors>
-			<int:wire-tap channel="dropper" />
-		</int:interceptors>
- -->	</int:channel>
-	
-<!-- 	<int-file:outbound-channel-adapter id="dropper" 
-		directory="file:/tmp/dropbox"
-		filename-generator-expression="'out-' + payload.name"
-		delete-source-files="false"
-		/>
-		 -->
-		 
-	
-	
-    
+	<int:publish-subscribe-channel id="parsechan"/>
+		    
     <int-xml:xpath-transformer id="extract"
     	xpath-expression="//Result/date | //Result/time | //Result/zone | //Result/ResultDescription/CharacteristicName | //Result//ResultMeasureValue | //Result//MeasureUnitCode"
     	evaluation-type="NODE_LIST_RESULT" output-channel="mapchan"
@@ -82,7 +68,10 @@
 		</int:interceptors>
 		 -->
 	</int:channel>
-<!-- 	<int:logging-channel-adapter id="logger01" level="DEBUG"/> -->
+	
+<!-- 	
+	<int:logging-channel-adapter id="logger01" level="DEBUG"/> 
+-->
     
     
 <!-- 

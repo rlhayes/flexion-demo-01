@@ -41,7 +41,7 @@ public class FileRecorder {
 		keys.put(DATE_KEY, -1);
 		coll.ensureIndex(keys);
 		
-		keys = new BasicDBObject(DATE_KEY, 11);
+		keys = new BasicDBObject(DATE_KEY, -1);
 		coll.ensureIndex(keys);
 	}
 	

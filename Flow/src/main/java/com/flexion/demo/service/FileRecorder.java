@@ -58,7 +58,7 @@ public class FileRecorder {
 		v.put(FILENAME_KEY, fn);
 		v.put(DATE_KEY, new Date());
 		
-		store.store(v);
+		store.storeMap(v);
 	}
 	
 	public void record(FileRecord fr) {
@@ -71,7 +71,7 @@ public class FileRecorder {
 		}
 		v.put(DATE_KEY, processed);
 		
-		store.store(v);		
+		store.storeMap(v);		
 	}
 	
 	public List<FileRecord> processed() {

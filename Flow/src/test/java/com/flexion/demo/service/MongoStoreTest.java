@@ -18,12 +18,12 @@ public class MongoStoreTest {
 		Store s = context.getBean("mongo-store", Store.class);
 
 		long b4 = s.count();
-		Map<String,String> thingie = new HashMap<String,String>();
+		Map<String,Object> thingie = new HashMap<String,Object>();
 		String myval = this.toString();
 		String mykey = "myself" + System.currentTimeMillis();
 		thingie.put(mykey,myval);
 		thingie.put("answer", "42");
-		s.store(thingie);
+		s.storeMap(thingie);
 		try{
 			long after = s.count();
 			assertEquals("store size has increased by one", b4+1, after);

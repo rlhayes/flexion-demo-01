@@ -41,14 +41,7 @@ public class Store {
 		}
 	}
 	
-	public void store(Object x) {
-		logger.info("Storing {}", x);
-
-		Map<String,String> m = (Map<String, String>) x;
-		store(m);	
-	}
-
-	public void store(Map<String, Object> m) {
+	public void storeMap(Map<String, Object> m) {
 		DBObject obj = new BasicDBObject(m);
 		store(obj);
 	}
